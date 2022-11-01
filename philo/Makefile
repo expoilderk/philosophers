@@ -14,6 +14,9 @@ $(NAME): $(OBJ)
 
 all: $(NAME)
 
+run:
+	./philo 5 800 800 800
+
 clean:
 	$(RM) $(OBJ)
 
