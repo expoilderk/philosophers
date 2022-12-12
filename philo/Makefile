@@ -6,7 +6,7 @@ SRC = $(wildcard *.c)
 OBJ = $(SRC:.c=.o)
 
 CFLAGS = -Wall -Werror -Wextra
-CC = cc
+CC = cc -pthread
 RM = rm -f
 
 $(NAME): $(OBJ)

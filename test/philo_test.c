@@ -10,7 +10,7 @@
 // Struct para armazenar os dados de cada filósofo
 typedef struct
 {
-    long id;
+    int id;
     int num_forks;
     int time_to_die;
     int time_to_eat;
@@ -34,7 +34,7 @@ long get_time(struct timeval timestamp)
 void *simular_comida(void *arg)
 {
     Philosopher *philosopher = (Philosopher *)arg;
-    long id = philosopher->id;
+    int id = philosopher->id;
     int num_forks = philosopher->num_forks;
     int left_fork = id;
     int right_fork = (id + 1) % num_forks;
@@ -52,7 +52,7 @@ void *simular_comida(void *arg)
         if (time_since_start > philosopher->time_to_die)
         {
             printf("%ld %d died\n", time_since_start, id);
-            break;
+            pthread_exit(NULL);
         }
 
         // Try to pick up forks
@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
 {
     if (argc < 5 || argc > 6)
     {
-        fprintf(stderr, "Uso: %s number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]\n");
+        printf("Uso: number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]\n");
     }
     // Lê os argumentos da linha de comando
     int num_philosophers = atoi(argv[1]);

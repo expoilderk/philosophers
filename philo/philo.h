@@ -13,10 +13,6 @@
 #ifndef PHILO_H
 #define PHILO_H
 
-#include <stdio.h>
-#include <pthread.h>
-#include <sys/time.h>
-
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,7 +25,7 @@
 // Struct para armazenar os dados de cada filósofo
 typedef struct s_philo
 {
-    long id;
+    int id;
     int times_eaten;
     int last_meal;
     pthread_t thread;

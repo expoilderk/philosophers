@@ -4,7 +4,7 @@
 void *dinner_routine(void *arg)
 {
     t_table *dinner = (t_table *)arg;
-    long id = dinner->philo->id;
+    int id = dinner->philo->id;
     int num_philo = dinner->num_philosophers;
 
     int left_fork = id;
@@ -23,7 +23,7 @@ void *dinner_routine(void *arg)
         if (time_since_start > dinner->time_to_die)
         {
             printf("%ld %d died\n", time_since_start, id);
-            break;
+            pthread_exit(NULL);
         }
 
         // Try to pick up forks
