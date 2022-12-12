@@ -1,7 +1,44 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   actions.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mreis-me <mreis-me@student.42.rio>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/12/12 20:12:22 by mreis-me          #+#    #+#             */
+/*   Updated: 2022/12/12 20:14:56 by mreis-me         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
-// Função que simula a comida de um filósofo
-void *dinner_routine(void *arg)
+int take_fork()
+{
+    return 0;
+}
+
+int eat()
+{
+    return 0;
+}
+
+int put_fork()
+{
+    return 0;
+}
+
+int sleeping()
+{
+    return 0;
+}
+
+int think()
+{
+    return 0;
+}
+
+/* FUNÇÃO PARA SER DESMEMBRADA EM OUTRAS FUNÇÕES DE AÇÃO
+void *dinner(void *arg)
 {
     t_table *dinner = (t_table *)arg;
     int id = dinner->philo->id;
@@ -57,3 +94,4 @@ void *dinner_routine(void *arg)
         // usleep(philosopher->time_to_sleep * 1000);
     }
 }
+*/

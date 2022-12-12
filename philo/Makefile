@@ -14,9 +14,6 @@ $(NAME): $(OBJ)
 
 all: $(NAME)
 
-run:
-	./philo 5 800 800 800
-
 clean:
 	$(RM) $(OBJ)
 
@@ -26,3 +23,10 @@ fclean: clean
 re: fclean all
 
 .PHONY: all clean fclean re
+
+# Tests
+test_1:
+	./philo 5 800 800 800
+
+test_2:
+	./philo 5 100 100 100

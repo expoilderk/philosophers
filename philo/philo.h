@@ -6,7 +6,7 @@
 /*   By: mreis-me <mreis-me@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 23:09:25 by mreis-me          #+#    #+#             */
-/*   Updated: 2022/12/11 21:59:25 by mreis-me         ###   ########.fr       */
+/*   Updated: 2022/12/12 20:14:48 by mreis-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,26 +45,35 @@ typedef struct s_table
     pthread_mutex_t death;
 } t_table;
 
-// Philo
-// void init_philo(t_table *philo);
+// Init & Finish
+void init_table(int argc, char **argv, t_table *table);
+void init_philo(t_table *table, t_philo *philo);
+void init_forks(t_table *table);
+void finish(t_table table);
 
-// Threads
+// Threads routines
+void *dinner(void *arg);
+void *waiter(void *arg);
 
 // Actions
-void *dinner_routine(void *arg);
-/*
-eat();
-think();
-sleep();
-*/
+int take_fork();
+int eat();
+int put_fork();
+int sleeping();
+int think();
 
 // Time
 // long get_time_now();
 long get_time(struct timeval timestamp);
 
 // Help or Error
+void error_msg();
+void help_msg();
+
+// Checks
 // int check(t_table *philo);
 
 // Utils
+void *lock_print(void *arg);
 
 #endif
