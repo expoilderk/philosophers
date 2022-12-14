@@ -6,7 +6,7 @@
 /*   By: mreis-me <mreis-me@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 20:13:08 by mreis-me          #+#    #+#             */
-/*   Updated: 2022/12/12 20:13:10 by mreis-me         ###   ########.fr       */
+/*   Updated: 2022/12/13 21:27:40 by mreis-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,38 +17,38 @@
  */
 
 // função init
-void init(int argc, char **argv, t_table *table)
+t_table init(int argc, char **argv)
 {
+    t_table table;
+
     // Inicializa a mesa
-    init_table(argc, argv, table);
+    init_table(argc, argv, &table);
 
     // Inicializa os filósofos
-    init_philo(table, table->philo);
+    init_philo(&table);
 
     // Inicializa os garfos
-    init_forks(table);
+    init_forks(&table);
+
+    return (table);
 }
 
 // função que inicializa a mesa
 void init_table(int argc, char **argv, t_table *table)
 {
-    // Lê os argumentos da linha de comando
-    int num_philosophers = atoi(argv[1]);
-    int time_to_die = atoi(argv[2]);
-    int time_to_eat = atoi(argv[3]);
-    int time_to_sleep = atoi(argv[4]);
-    int num_times_eat = (argc == 6) ? atoi(argv[5]) : 0;
-
     // Inicializa os dados da mesa
-    table->num_philosophers = num_philosophers;
-    table->time_to_die = time_to_die;
-    table->time_to_eat = time_to_eat;
-    table->time_to_sleep = time_to_sleep;
-    table->num_times_eat = num_times_eat;
+    table->num_philosophers = ft_atoi(argv[1]);
+    table->time_to_die = ft_atoi(argv[2]);
+    table->time_to_eat = ft_atoi(argv[3]);
+    table->time_to_sleep = ft_atoi(argv[4]);
+    if (argc == 6)
+        table->num_times_eat = ft_atoi(argv[5]);
+    else
+        table->num_times_eat = 0;
 }
 
 // função que inicializa os filósofos
-void init_philo(t_table *table, t_philo *philo)
+void init_philo(t_table *table)
 {
     int i = 0;
     // Aloca memória para os filósofos
@@ -57,9 +57,9 @@ void init_philo(t_table *table, t_philo *philo)
     // Inicializa os dados para cada filósofo
     while (i < table->num_philosophers)
     {
-        philo->id = i;
-        philo->times_eaten = 0;
-        philo->last_meal = 0;
+        table->philo[i].id = i;
+        table->philo[i].times_eaten = 0;
+        table->philo[i].last_meal = 0;
 
         // Cria as threads para cada filósofo
         pthread_create(&table->philo[i].thread, NULL, lock_print, &table->philo[i]);
@@ -77,7 +77,5 @@ void init_forks(t_table *table)
 
     // Inicializa mutexes para os garfos
     while (i < table->num_philosophers)
-    {
         pthread_mutex_init(&table->forks[i++], NULL);
-    }
 }
