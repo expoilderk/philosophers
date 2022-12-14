@@ -6,7 +6,7 @@
 /*   By: mreis-me <mreis-me@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 20:12:59 by mreis-me          #+#    #+#             */
-/*   Updated: 2022/12/12 20:13:00 by mreis-me         ###   ########.fr       */
+/*   Updated: 2022/12/13 20:16:03 by mreis-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +16,15 @@
 void finish(t_table table)
 {
     int i = 0;
-    int num_philosophers = table.num_philosophers;
 
     // Aguarda as threads dos filósofos terminarem
-    while (i < num_philosophers)
-    {
-        pthread_join(table.philo[i].thread, NULL);
-        i++;
-    }
+    while (i < table.num_philosophers)
+        pthread_join(table.philo[i++].thread, NULL);
 
     // Limpa os mutexes dos garfos
-    while (i < num_philosophers)
-    {
-        pthread_mutex_destroy(&table.forks[i]);
-        i++;
-    }
+    i = 0;
+    while (i < table.num_philosophers)
+        pthread_mutex_destroy(&table.forks[i++]);
 
     // Libera a memória alocada
     free(table.philo);
