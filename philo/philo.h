@@ -6,7 +6,7 @@
 /*   By: mreis-me <mreis-me@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 23:09:25 by mreis-me          #+#    #+#             */
-/*   Updated: 2022/12/13 21:27:42 by mreis-me         ###   ########.fr       */
+/*   Updated: 2022/12/19 18:33:37 by mreis-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,14 @@ typedef struct s_philo
     int id;
     int times_eaten;
     int last_meal;
+    int left_fork;
+    int right_fork;
+    struct s_rules *rules;
     pthread_t thread;
 } t_philo;
 
 // Struct para armazenar os dados da mesa
-typedef struct s_table
+typedef struct s_rules
 {
     int num_philosophers;
     int time_to_die;
@@ -41,18 +44,19 @@ typedef struct s_table
     int num_times_eat;
     t_philo *philo;
     pthread_mutex_t *forks;
-    pthread_mutex_t print; // não utilizada ainda
+    pthread_mutex_t print;
     pthread_mutex_t death; // não utilizada ainda
-} t_table;
+} t_rules;
 
 // Init & Finish
-t_table init(int argc, char **argv);
-void init_table(int argc, char **argv, t_table *table);
-void init_philo(t_table *table);
-void init_forks(t_table *table);
-void finish(t_table table);
+void init(char **argv, t_rules *rules);
+void init_rules(char **argv, t_rules *rules);
+void init_philo(t_rules *table);
+void init_mutex(t_rules *table);
+void finish(t_rules *table);
 
 // Threads routines
+void *test_thread(void *arg);
 void *dinner(void *arg);
 void *waiter(void *arg);
 
@@ -74,11 +78,13 @@ void help_msg();
 // Checks
 int check(int argc, char **argv);
 
-// Utils
+// Libft
 int ft_atoi(const char *str);
 long int ft_atoi_l(const char *str);
 int ft_isdigit(int c);
 int ft_issign(char c);
-void *lock_print(void *arg);
+
+// Utils
+void lock_print(int id, char *string);
 
 #endif

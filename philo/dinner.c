@@ -6,7 +6,7 @@
 /*   By: mreis-me <mreis-me@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 20:12:42 by mreis-me          #+#    #+#             */
-/*   Updated: 2022/12/12 20:19:47 by mreis-me         ###   ########.fr       */
+/*   Updated: 2022/12/19 17:53:43 by mreis-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void *dinner(void *arg)
     (void)arg;
 
     /*
-    t_table *dinner = (t_table *)arg;
+    t_rules *dinner = (t_rules *)arg;
 
         while (!someone_die() && !all_satisfied())
         {

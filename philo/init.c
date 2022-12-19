@@ -6,7 +6,7 @@
 /*   By: mreis-me <mreis-me@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 20:13:08 by mreis-me          #+#    #+#             */
-/*   Updated: 2022/12/13 21:27:40 by mreis-me         ###   ########.fr       */
+/*   Updated: 2022/12/19 18:29:42 by mreis-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,65 +17,67 @@
  */
 
 // função init
-t_table init(int argc, char **argv)
+void init(char **argv, t_rules *rules)
 {
-    t_table table;
+    // t_rules rules;
 
     // Inicializa a mesa
-    init_table(argc, argv, &table);
+    init_rules(argv, rules);
 
     // Inicializa os filósofos
-    init_philo(&table);
+    init_philo(rules);
 
     // Inicializa os garfos
-    init_forks(&table);
-
-    return (table);
+    init_mutex(rules);
 }
 
 // função que inicializa a mesa
-void init_table(int argc, char **argv, t_table *table)
+void init_rules(char **argv, t_rules *rules)
 {
-    // Inicializa os dados da mesa
-    table->num_philosophers = ft_atoi(argv[1]);
-    table->time_to_die = ft_atoi(argv[2]);
-    table->time_to_eat = ft_atoi(argv[3]);
-    table->time_to_sleep = ft_atoi(argv[4]);
-    if (argc == 6)
-        table->num_times_eat = ft_atoi(argv[5]);
+    // Inicializa os dados das regras
+    rules->num_philosophers = ft_atoi(argv[1]);
+    rules->time_to_die = ft_atoi(argv[2]);
+    rules->time_to_eat = ft_atoi(argv[3]);
+    rules->time_to_sleep = ft_atoi(argv[4]);
+    if (argv[5])
+        rules->num_times_eat = ft_atoi(argv[5]);
     else
-        table->num_times_eat = 0;
+        rules->num_times_eat = -1;
 }
 
 // função que inicializa os filósofos
-void init_philo(t_table *table)
+void init_philo(t_rules *rules)
 {
     int i = 0;
     // Aloca memória para os filósofos
-    table->philo = malloc(sizeof(t_philo) * table->num_philosophers);
+    rules->philo = malloc(sizeof(t_philo) * rules->num_philosophers);
 
     // Inicializa os dados para cada filósofo
-    while (i < table->num_philosophers)
+    while (i < rules->num_philosophers)
     {
-        table->philo[i].id = i;
-        table->philo[i].times_eaten = 0;
-        table->philo[i].last_meal = 0;
+        rules->philo[i].id = i;
+        rules->philo[i].left_fork = i;
+        rules->philo[i].right_fork = (i + 1) % rules->num_philosophers;
+        rules->philo[i].times_eaten = 0;
+        rules->philo[i].last_meal = 0;
 
         // Cria as threads para cada filósofo
-        pthread_create(&table->philo[i].thread, NULL, lock_print, &table->philo[i]);
+        pthread_create(&rules->philo[i].thread, NULL, test_thread, &rules->philo[i]);
         i++;
     }
 }
 
 // função que inicializa os mutexes dos garfos
-void init_forks(t_table *table)
+void init_mutex(t_rules *rules)
 {
     int i = 0;
 
     // Aloca memória para os garfos
-    table->forks = malloc(sizeof(pthread_mutex_t) * table->num_philosophers);
+    rules->forks = malloc(sizeof(pthread_mutex_t) * rules->num_philosophers);
 
     // Inicializa mutexes para os garfos
-    while (i < table->num_philosophers)
-        pthread_mutex_init(&table->forks[i++], NULL);
+    while (i < rules->num_philosophers)
+        pthread_mutex_init(&rules->forks[i++], NULL);
+
+    pthread_mutex_init(&rules->print, NULL);
 }
