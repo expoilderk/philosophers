@@ -6,11 +6,21 @@
 /*   By: mreis-me <mreis-me@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 20:12:42 by mreis-me          #+#    #+#             */
-/*   Updated: 2022/12/19 17:53:43 by mreis-me         ###   ########.fr       */
+/*   Updated: 2022/12/21 09:10:58 by mreis-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+// Função apenas de teste, remover depois
+void *test_thread(void *arg)
+{
+    (void)arg;
+    t_philo *philo = (t_philo *)arg;
+
+    lock_print(philo->id, "is thinking");
+    return (NULL);
+}
 
 // Modelo de código para a função dinner
 /*
