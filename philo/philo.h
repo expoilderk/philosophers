@@ -6,7 +6,7 @@
 /*   By: mreis-me <mreis-me@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 23:09:25 by mreis-me          #+#    #+#             */
-/*   Updated: 2022/12/19 18:33:37 by mreis-me         ###   ########.fr       */
+/*   Updated: 2022/12/21 09:52:51 by mreis-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ typedef struct s_rules
     int time_to_eat;
     int time_to_sleep;
     int num_times_eat;
+    // long start_time;
+    struct timeval start_time;
     t_philo *philo;
     pthread_mutex_t *forks;
     pthread_mutex_t print;
@@ -68,8 +70,8 @@ int sleeping();
 int think();
 
 // Time
-// long get_time_now();
-long get_time(struct timeval timestamp);
+long get_current_time();
+long get_time_travelled(struct timeval timestamp);
 
 // Help or Error
 void error_msg();
