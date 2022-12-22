@@ -6,7 +6,7 @@
 /*   By: mreis-me <mreis-me@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 20:13:08 by mreis-me          #+#    #+#             */
-/*   Updated: 2022/12/22 11:13:49 by mreis-me         ###   ########.fr       */
+/*   Updated: 2022/12/22 15:56:11 by mreis-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,11 @@ void init(char **argv, t_rules *rules)
     // Inicializa a mesa
     init_rules(argv, rules);
 
-    // Inicializa os filósofos
-    init_philo(rules);
-
     // Inicializa os garfos
     init_mutex(rules);
+
+    // Inicializa os filósofos
+    init_philo(rules);
 }
 
 // função que inicializa a mesa
@@ -65,7 +65,7 @@ void init_philo(t_rules *rules)
         rules->philo[i].last_meal = 0;
         rules->philo[i].rules = rules;
         
-        // Cria as threads para cada filósofo
+        // Cria as threads para cada filósofo (Criar uma função especifica init_threads?)
         pthread_create(&rules->philo[i].thread, NULL, test_thread, &rules->philo[i]);
         i++;
     }
