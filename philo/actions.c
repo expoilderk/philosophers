@@ -6,35 +6,39 @@
 /*   By: mreis-me <mreis-me@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 20:12:22 by mreis-me          #+#    #+#             */
-/*   Updated: 2022/12/19 17:53:43 by mreis-me         ###   ########.fr       */
+/*   Updated: 2022/12/22 15:18:35 by mreis-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int take_fork()
+void take_fork(t_rules *rules, t_philo *philo)
 {
-    return 0;
+    pthread_mutex_lock(&rules->forks[philo->left_fork]);
+    lock_print(rules, philo->id, "has taken a fork");
+    pthread_mutex_lock(&rules->forks[philo->right_fork]);
+    lock_print(rules, philo->id, "has taken a fork");
 }
 
-int eat()
+void eat(t_rules *rules, t_philo *philo)
 {
-    return 0;
+    lock_print(rules, philo->id, "is eating");
+    philo->last_meal = timestamp();
+    philo->times_eaten++;
+    usleep(rules->time_to_eat * 1000);
 }
 
-int put_fork()
+void put_fork(t_rules *rules, t_philo *philo)
 {
-    return 0;
+    pthread_mutex_unlock(&rules->forks[philo->left_fork]);
+    pthread_mutex_unlock(&rules->forks[philo->right_fork]);
 }
 
-int sleeping()
+void sleeping_and_thinking(t_rules *rules, t_philo *philo)
 {
-    return 0;
-}
-
-int think()
-{
-    return 0;
+    lock_print(rules, philo->id, "is sleeping");
+    usleep(rules->time_to_sleep * 1000);
+    lock_print(rules, philo->id, "is thinking");
 }
 
 /* FUNÇÃO PARA SER DESMEMBRADA EM OUTRAS FUNÇÕES DE AÇÃO

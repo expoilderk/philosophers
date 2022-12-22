@@ -6,27 +6,27 @@
 /*   By: mreis-me <mreis-me@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 20:12:59 by mreis-me          #+#    #+#             */
-/*   Updated: 2022/12/19 18:14:43 by mreis-me         ###   ########.fr       */
+/*   Updated: 2022/12/22 14:58:24 by mreis-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
 // Função que aguarda as threads dos filósofos terminarem
-void finish(t_rules *table)
+void finish(t_rules *rules)
 {
     int i = 0;
 
     // Aguarda as threads dos filósofos terminarem
-    while (i < table->num_philosophers)
-        pthread_join(table->philo[i++].thread, NULL);
+    while (i < rules->num_philosophers)
+        pthread_join(rules->philo[i++].thread, NULL);
 
     // Limpa os mutexes dos garfos
     i = 0;
-    while (i < table->num_philosophers)
-        pthread_mutex_destroy(&table->forks[i++]);
+    while (i < rules->num_philosophers)
+        pthread_mutex_destroy(&rules->forks[i++]);
 
     // Libera a memória alocada
-    free(table->philo);
-    free(table->forks);
+    free(rules->philo);
+    free(rules->forks);
 }

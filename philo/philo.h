@@ -6,7 +6,7 @@
 /*   By: mreis-me <mreis-me@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 23:09:25 by mreis-me          #+#    #+#             */
-/*   Updated: 2022/12/22 10:54:56 by mreis-me         ###   ########.fr       */
+/*   Updated: 2022/12/22 15:56:22 by mreis-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ typedef struct s_philo
 {
     int id;
     int times_eaten;
-    int last_meal;
+    long last_meal;
     int left_fork;
     int right_fork;
     struct s_rules *rules;
@@ -54,9 +54,9 @@ typedef struct s_rules
 // Init & Finish
 void init(char **argv, t_rules *rules);
 void init_rules(char **argv, t_rules *rules);
-void init_philo(t_rules *table);
-void init_mutex(t_rules *table);
-void finish(t_rules *table);
+void init_philo(t_rules *rules);
+void init_mutex(t_rules *rules);
+void finish(t_rules *rules);
 
 // Threads routines
 void *test_thread(void *arg);
@@ -64,11 +64,10 @@ void *dinner(void *arg);
 void *waiter(void *arg);
 
 // Actions
-int take_fork();
-int eat();
-int put_fork();
-int sleeping();
-int think();
+void take_fork(t_rules *rules, t_philo *philo);
+void eat(t_rules *rules, t_philo *philo);
+void put_fork(t_rules *rules, t_philo *philo);
+void sleeping_and_thinking(t_rules *rules, t_philo *philo);
 
 // Time
 long timestamp();
