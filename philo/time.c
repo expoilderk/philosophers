@@ -6,7 +6,7 @@
 /*   By: mreis-me <mreis-me@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 20:13:28 by mreis-me          #+#    #+#             */
-/*   Updated: 2022/12/21 09:52:49 by mreis-me         ###   ########.fr       */
+/*   Updated: 2022/12/21 22:50:21 by mreis-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 /**
  *  Essa função retorna o tempo atual em milissegundos.
  */
-long get_current_time()
+long current_time()
 {
     struct timeval time;
     gettimeofday(&time, NULL);
@@ -23,12 +23,20 @@ long get_current_time()
 }
 
 /**
+ *  Essa função tira a diferença entre dois timestamps em milissegundos.
+ */
+long time_diff(long start, long end)
+{
+    return (end - start);
+}
+
+/**
  *  Essa função calcula o tempo transcorrido em milissegundos entre um
  *  timestamp especificado como argumento e o tempo atual.
  */
-long get_time_travelled(struct timeval timestamp)
+long time_travelled(long timestamp)
 {
-    struct timeval current_time;
-    gettimeofday(&current_time, NULL);
-    return (current_time.tv_sec - timestamp.tv_sec) * 1000 + (current_time.tv_usec - timestamp.tv_usec) / 1000;
+    long ms;
+    ms = current_time();
+    return (time_diff(ms, timestamp));
 }

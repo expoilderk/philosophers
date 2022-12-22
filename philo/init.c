@@ -6,7 +6,7 @@
 /*   By: mreis-me <mreis-me@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 20:13:08 by mreis-me          #+#    #+#             */
-/*   Updated: 2022/12/21 09:49:47 by mreis-me         ###   ########.fr       */
+/*   Updated: 2022/12/21 22:49:46 by mreis-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,6 @@
 // função init
 void init(char **argv, t_rules *rules)
 {
-    // Guarda o tempo inicial (Remover daqui depois?)
-    gettimeofday(&rules->start_time, NULL);
-
     // Inicializa a mesa
     init_rules(argv, rules);
 
@@ -40,6 +37,8 @@ void init_rules(char **argv, t_rules *rules)
     rules->time_to_die = ft_atoi(argv[2]);
     rules->time_to_eat = ft_atoi(argv[3]);
     rules->time_to_sleep = ft_atoi(argv[4]);
+    rules->all_satisfied = 0;
+    rules->someone_died = 0;
     if (argv[5])
         rules->num_times_eat = ft_atoi(argv[5]);
     else
@@ -56,14 +55,16 @@ void init_philo(t_rules *rules)
     // Inicializa os dados para cada filósofo
     while (i < rules->num_philosophers)
     {
-        rules->philo[i].id = i;
+        rules->philo[i].id = i + 1;
         rules->philo[i].left_fork = i;
         rules->philo[i].right_fork = (i + 1) % rules->num_philosophers;
         rules->philo[i].times_eaten = 0;
         rules->philo[i].last_meal = 0;
+        rules->philo[i].rules = rules;
 
-        // Apenas para teste (Remover daqui depois)
-        // usleep(1000 * rules->philo[i].id);
+        // Guarda o tempo inicial (Remover daqui depois?)
+        // gettimeofday(&rules->start_time, NULL);
+        rules->start_time = current_time();
 
         // Cria as threads para cada filósofo
         pthread_create(&rules->philo[i].thread, NULL, test_thread, &rules->philo[i]);
