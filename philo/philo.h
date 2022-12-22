@@ -6,7 +6,7 @@
 /*   By: mreis-me <mreis-me@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 23:09:25 by mreis-me          #+#    #+#             */
-/*   Updated: 2022/12/22 15:56:22 by mreis-me         ###   ########.fr       */
+/*   Updated: 2022/12/22 16:30:46 by mreis-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@ void take_fork(t_rules *rules, t_philo *philo);
 void eat(t_rules *rules, t_philo *philo);
 void put_fork(t_rules *rules, t_philo *philo);
 void sleeping_and_thinking(t_rules *rules, t_philo *philo);
+int someone_died(t_rules *rules, t_philo *philo);
+int all_satisfied(t_rules *rules, t_philo *philo);
 
 // Time
 long timestamp();

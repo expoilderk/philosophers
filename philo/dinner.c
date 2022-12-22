@@ -6,7 +6,7 @@
 /*   By: mreis-me <mreis-me@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 20:12:42 by mreis-me          #+#    #+#             */
-/*   Updated: 2022/12/22 15:47:27 by mreis-me         ###   ########.fr       */
+/*   Updated: 2022/12/22 16:48:22 by mreis-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,10 @@ void *test_thread(void *arg)
     philo = (t_philo *)arg;
     rules = philo->rules;
 
+    // while (all_satisfied(rules, philo) == 0)
+
+    // Só leva em consideração as vezes que cada um comeu, 
+    // falta verificar a morte e fazer isso em duas funções especificas
     while (philo->times_eaten != rules->num_times_eat)
     {
         if(philo->id % 2)
