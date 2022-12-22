@@ -6,7 +6,7 @@
 /*   By: mreis-me <mreis-me@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 23:09:25 by mreis-me          #+#    #+#             */
-/*   Updated: 2022/12/21 09:52:51 by mreis-me         ###   ########.fr       */
+/*   Updated: 2022/12/22 10:54:56 by mreis-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,9 @@ typedef struct s_rules
     int time_to_eat;
     int time_to_sleep;
     int num_times_eat;
-    // long start_time;
-    struct timeval start_time;
+    int all_satisfied;
+    int someone_died;
+    long start_time;
     t_philo *philo;
     pthread_mutex_t *forks;
     pthread_mutex_t print;
@@ -70,8 +71,9 @@ int sleeping();
 int think();
 
 // Time
-long get_current_time();
-long get_time_travelled(struct timeval timestamp);
+long timestamp();
+long time_diff(long start, long end);
+long time_travelled(struct timeval timestamp);
 
 // Help or Error
 void error_msg();
@@ -87,6 +89,6 @@ int ft_isdigit(int c);
 int ft_issign(char c);
 
 // Utils
-void lock_print(int id, char *string);
+void lock_print(t_rules *rules, int id, char *string);
 
 #endif
