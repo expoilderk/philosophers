@@ -6,7 +6,7 @@
 /*   By: mreis-me <mreis-me@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 20:13:08 by mreis-me          #+#    #+#             */
-/*   Updated: 2022/12/21 22:49:46 by mreis-me         ###   ########.fr       */
+/*   Updated: 2022/12/22 11:13:49 by mreis-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@
 // função init
 void init(char **argv, t_rules *rules)
 {
+    // Guarda o tempo inicial
+    rules->start_time = timestamp();
+
     // Inicializa a mesa
     init_rules(argv, rules);
 
@@ -61,11 +64,7 @@ void init_philo(t_rules *rules)
         rules->philo[i].times_eaten = 0;
         rules->philo[i].last_meal = 0;
         rules->philo[i].rules = rules;
-
-        // Guarda o tempo inicial (Remover daqui depois?)
-        // gettimeofday(&rules->start_time, NULL);
-        rules->start_time = current_time();
-
+        
         // Cria as threads para cada filósofo
         pthread_create(&rules->philo[i].thread, NULL, test_thread, &rules->philo[i]);
         i++;

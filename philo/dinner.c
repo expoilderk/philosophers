@@ -6,7 +6,7 @@
 /*   By: mreis-me <mreis-me@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 20:12:42 by mreis-me          #+#    #+#             */
-/*   Updated: 2022/12/21 11:54:21 by mreis-me         ###   ########.fr       */
+/*   Updated: 2022/12/22 11:11:48 by mreis-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,24 +21,26 @@ void *test_thread(void *arg)
     philo = (t_philo *)arg;
     rules = philo->rules;
 
+
     while (philo->times_eaten != rules->num_times_eat)
     {
         // pthread_mutex_lock(&rules->forks[philo->left_fork]);
-        // lock_print(philo->id, "has taken a fork");
+        // lock_print(rules, philo->id, "has taken a fork");
         // pthread_mutex_lock(&rules->forks[philo->right_fork]);
-        // lock_print(philo->id, "has taken a fork");
+        // lock_print(rules, philo->id, "has taken a fork");
+        
 
-        lock_print(philo->id, "is eating");
+        lock_print(rules, philo->id, "is eating");
         philo->times_eaten++;
         usleep(1000);
 
         // pthread_mutex_unlock(&rules->forks[philo->left_fork]);
         // pthread_mutex_unlock(&rules->forks[philo->right_fork]);
 
-        lock_print(philo->id, "is sleeping");
+        lock_print(rules, philo->id, "is sleeping");
         usleep(1000);
 
-        lock_print(philo->id, "is thinking");
+        lock_print(rules, philo->id, "is thinking");
         usleep(1000);
     }
 
