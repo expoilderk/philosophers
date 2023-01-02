@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "*.tcc": "c",
+        "mutex": "c",
+        "stop_token": "c",
+        "thread": "c"
+    }
+}

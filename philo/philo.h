@@ -6,7 +6,7 @@
 /*   By: mreis-me <mreis-me@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 23:09:25 by mreis-me          #+#    #+#             */
-/*   Updated: 2022/12/22 16:30:46 by mreis-me         ###   ########.fr       */
+/*   Updated: 2023/01/02 01:42:34 by mreis-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ typedef struct s_philo
     int left_fork;
     int right_fork;
     struct s_rules *rules;
-    pthread_t thread;
+    pthread_t thread_philo;
 } t_philo;
 
 // Struct para armazenar os dados da mesa
@@ -46,33 +46,37 @@ typedef struct s_rules
     int someone_died;
     long start_time;
     t_philo *philo;
+    // pthread_t thread_waiter; // Talvez tirar daqui
     pthread_mutex_t *forks;
     pthread_mutex_t print;
-    pthread_mutex_t death; // não utilizada ainda
+    pthread_mutex_t check;
 } t_rules;
 
 // Init & Finish
 void init(char **argv, t_rules *rules);
 void init_rules(char **argv, t_rules *rules);
 void init_philo(t_rules *rules);
+void init_waiter(t_rules *rules);
 void init_mutex(t_rules *rules);
 void finish(t_rules *rules);
 
 // Threads routines
 void *test_thread(void *arg);
 void *dinner(void *arg);
-void *waiter(void *arg);
+// void *waiter(void *arg);
 
 // Actions
 void take_fork(t_rules *rules, t_philo *philo);
 void eat(t_rules *rules, t_philo *philo);
 void put_fork(t_rules *rules, t_philo *philo);
 void sleeping_and_thinking(t_rules *rules, t_philo *philo);
-int someone_died(t_rules *rules, t_philo *philo);
-int all_satisfied(t_rules *rules, t_philo *philo);
+void waiter(t_rules *rules, t_philo *philo);
+// int someone_died(t_rules *rules, t_philo *philo);
+// int all_satisfied(t_rules *rules, t_philo *philo);
 
 // Time
 long timestamp();
+void sleep_ms(int ms);
 long time_diff(long start, long end);
 long time_travelled(struct timeval timestamp);
 

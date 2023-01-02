@@ -6,7 +6,7 @@
 /*   By: mreis-me <mreis-me@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 20:13:08 by mreis-me          #+#    #+#             */
-/*   Updated: 2022/12/22 16:48:34 by mreis-me         ###   ########.fr       */
+/*   Updated: 2023/01/02 01:44:23 by mreis-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,9 @@ void init(char **argv, t_rules *rules)
 
     // Inicializa os filósofos
     init_philo(rules);
+
+    // Inicializa o waiter
+    // init_waiter(rules);
 }
 
 // função que inicializa a mesa
@@ -64,12 +67,18 @@ void init_philo(t_rules *rules)
         rules->philo[i].times_eaten = 0;
         rules->philo[i].last_meal = 0;
         rules->philo[i].rules = rules;
-        
+
         // Cria as threads para cada filósofo (Criar uma função especifica init_threads?)
-        pthread_create(&rules->philo[i].thread, NULL, test_thread, &rules->philo[i]);
+        pthread_create(&rules->philo[i].thread_philo, NULL, test_thread, &rules->philo[i]);
         i++;
     }
 }
+
+// void init_waiter(t_rules *rules)
+// {
+//     // Cria a thread_philo do waiter
+//     pthread_create(&rules->thread_waiter, NULL, waiter, rules);
+// }
 
 // função que inicializa os mutexes dos garfos
 void init_mutex(t_rules *rules)
@@ -79,9 +88,10 @@ void init_mutex(t_rules *rules)
     // Aloca memória para os garfos
     rules->forks = malloc(sizeof(pthread_mutex_t) * rules->num_philosophers);
 
+    pthread_mutex_init(&rules->print, NULL);
+    pthread_mutex_init(&rules->check, NULL);
+
     // Inicializa mutexes para os garfos
     while (i < rules->num_philosophers)
         pthread_mutex_init(&rules->forks[i++], NULL);
-
-    pthread_mutex_init(&rules->print, NULL);
 }

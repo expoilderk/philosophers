@@ -6,7 +6,7 @@
 /*   By: mreis-me <mreis-me@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 20:13:28 by mreis-me          #+#    #+#             */
-/*   Updated: 2022/12/22 10:50:07 by mreis-me         ###   ########.fr       */
+/*   Updated: 2023/01/02 00:36:16 by mreis-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 long timestamp()
 {
     struct timeval time;
+
     gettimeofday(&time, NULL);
     return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }
@@ -28,6 +29,20 @@ long timestamp()
 long time_diff(long start, long end)
 {
     return (end - start);
+}
+
+/**
+ *  Essa função retorna o tempo atual em milissegundos.
+ */
+void sleep_ms(int ms)
+{
+    long int time;
+
+    time = timestamp();
+    // while (time_diff(timestamp(), time) < ms)
+    //     usleep(ms / 10);
+    while (timestamp() - time < ms)
+        usleep(ms / 10);
 }
 
 /**

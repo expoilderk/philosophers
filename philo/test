@@ -1,0 +1,132 @@
+Esse é o código do meu arquivo header :
+
+#ifndef PHILO_H
+#define PHILO_H
+
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/time.h>
+
+#define INT_MIN -2147483648
+#define INT_MAX 2147483647
+
+    // Struct para armazenar os dados de cada filósofo
+    typedef struct s_philo
+{
+    int id;
+    int times_eaten;
+    long last_meal;
+    int left_fork;
+    int right_fork;
+    struct s_rules *rules;
+    pthread_t thread;
+} t_philo;
+
+// Struct para armazenar os dados da mesa
+typedef struct s_rules
+{
+    int num_philosophers;
+    int time_to_die;
+    int time_to_eat;
+    int time_to_sleep;
+    int num_times_eat;
+    int all_satisfied;
+    int someone_died;
+    long start_time;
+    t_philo *philo;
+    pthread_mutex_t *forks;
+    pthread_mutex_t print;
+    pthread_mutex_t death; // não utilizada ainda
+} t_rules;
+
+// Init & Finish
+void init(char **argv, t_rules *rules);
+void init_rules(char **argv, t_rules *rules);
+void init_philo(t_rules *rules);
+void init_mutex(t_rules *rules);
+void finish(t_rules *rules);
+
+// Threads routines
+void *test_thread(void *arg);
+void *dinner(void *arg);
+void *waiter(void *arg);
+
+// Actions
+void take_fork(t_rules *rules, t_philo *philo);
+void eat(t_rules *rules, t_philo *philo);
+void put_fork(t_rules *rules, t_philo *philo);
+void sleeping_and_thinking(t_rules *rules, t_philo *philo);
+int someone_died(t_rules *rules, t_philo *philo);
+int all_satisfied(t_rules *rules, t_philo *philo);
+
+// Time
+long timestamp();
+void sleep_ms(int ms);
+long time_diff(long start, long end);
+long time_travelled(struct timeval timestamp);
+
+// Help or Error
+void error_msg();
+void help_msg();
+
+// Checks
+int check(int argc, char **argv);
+
+// Libft
+int ft_atoi(const char *str);
+long int ft_atoi_l(const char *str);
+int ft_isdigit(int c);
+int ft_issign(char c);
+
+// Utils
+void lock_print(t_rules *rules, int id, char *string);
+
+#endif
+
+Esse é o código das funções que realizam as ações dos filósofos :
+
+#include "philo.h"
+
+    void
+    take_fork(t_rules *rules, t_philo *philo)
+{
+    pthread_mutex_lock(&rules->forks[philo->left_fork]);
+    lock_print(rules, philo->id, "has taken a fork");
+    if (rules->num_philosophers == 1)
+    {
+        sleep_ms(rules->time_to_die * 2);
+        return;
+    }
+    pthread_mutex_lock(&rules->forks[philo->right_fork]);
+    lock_print(rules, philo->id, "has taken a fork");
+}
+
+void eat(t_rules *rules, t_philo *philo)
+{
+    lock_print(rules, philo->id, "is eating");
+    philo->last_meal = timestamp();
+    philo->times_eaten++;
+    usleep(rules->time_to_eat * 1000);
+}
+
+void put_fork(t_rules *rules, t_philo *philo)
+{
+    pthread_mutex_unlock(&rules->forks[philo->left_fork]);
+    pthread_mutex_unlock(&rules->forks[philo->right_fork]);
+}
+
+void sleeping_and_thinking(t_rules *rules, t_philo *philo)
+{
+    lock_print(rules, philo->id, "is sleeping");
+    // usleep(rules->time_to_sleep * 1000);
+    sleep_ms(rules->time_to_sleep);
+    lock_print(rules, philo->id, "is thinking");
+}
+
+Crie uma função chamada someone_died que verifica se algum filosofo morreu, imprime o status como as funções acima
+                                                                                e encerra o programa.
+
+                                                                            Crie também uma função chamada all_satisfied que verifica se todos os filósofos já comeram o número de vezes
+                                                                                que foi passado para num_times_eat.
