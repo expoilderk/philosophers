@@ -6,7 +6,7 @@
 /*   By: mreis-me <mreis-me@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 23:09:25 by mreis-me          #+#    #+#             */
-/*   Updated: 2023/01/03 20:05:25 by mreis-me         ###   ########.fr       */
+/*   Updated: 2023/01/04 00:18:21 by mreis-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,13 +67,13 @@ void *waiter(void *arg);
 // Actions
 void take_fork(t_rules *rules, t_philo *philo);
 void eat(t_rules *rules, t_philo *philo);
-void put_fork(t_rules *rules, t_philo *philo);
 void sleeping_and_thinking(t_rules *rules, t_philo *philo);
 
 // Time
 long timestamp();
 long time_diff(long start, long end);
-void smart_sleep(long time, t_rules *rules);
+void smart_sleep(int time, t_rules *rules);
+void ft_usleep(int ms);
 
 // Help or Error
 void error_msg();

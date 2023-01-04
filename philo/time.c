@@ -6,7 +6,7 @@
 /*   By: mreis-me <mreis-me@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 20:13:28 by mreis-me          #+#    #+#             */
-/*   Updated: 2023/01/03 20:04:39 by mreis-me         ###   ########.fr       */
+/*   Updated: 2023/01/04 00:18:19 by mreis-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,15 +34,43 @@ long time_diff(long start, long end)
 /**
  *  Essa função retorna o tempo atual em milissegundos.
  */
-void smart_sleep(long time, t_rules *rules)
+// void smart_sleep(long time, t_rules *rules)
+// {
+//     long start;
+
+//     start = timestamp();
+//     while (!rules->finish)
+//     {
+//         if (time_diff(start, timestamp()) >= time)
+//             break;
+//         usleep(50);
+//     }
+// }
+
+void smart_sleep(int time, t_rules *rules)
 {
-    long start;
+    long int start;
 
     start = timestamp();
-    while (!rules->finish)
+
+    while (timestamp() - start < time)
     {
-        if (time_diff(start, timestamp()) >= time)
+        usleep(time / 10);
+        pthread_mutex_lock(&rules->m_finish);
+        if (rules->finish)
+        {
+            pthread_mutex_unlock(&rules->m_finish);
             break;
-        usleep(50);
+        }
+        pthread_mutex_unlock(&rules->m_finish);
     }
+}
+
+void ft_usleep(int ms)
+{
+    long int time;
+
+    time = timestamp();
+    while (timestamp() - time < ms)
+        usleep(ms / 10);
 }

@@ -6,7 +6,7 @@
 /*   By: mreis-me <mreis-me@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 20:12:42 by mreis-me          #+#    #+#             */
-/*   Updated: 2023/01/03 20:46:44 by mreis-me         ###   ########.fr       */
+/*   Updated: 2023/01/04 00:18:16 by mreis-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,15 +20,32 @@ void *dinner(void *arg)
 
     philo = (t_philo *)arg;
     rules = philo->rules;
-    if (philo->id % 2)
-        usleep(rules->time_to_eat * 1000);
+    if (philo->id % 2 && rules->num_philosophers > 1)
+        usleep(rules->time_to_eat * 100);
+    // smart_sleep(rules->time_to_eat, rules);
+    // ft_usleep(rules->time_to_eat / 10);
+
     while (!rules->finish)
     {
         take_fork(rules, philo);
         eat(rules, philo);
-        // put_fork(rules, philo);
         sleeping_and_thinking(rules, philo);
     }
+
+    // while (1)
+    // {
+    //     pthread_mutex_lock(&rules->m_finish);
+    //     if (rules->finish)
+    //     {
+    //         pthread_mutex_unlock(&rules->m_finish);
+    //         break;
+    //     }
+    //     pthread_mutex_unlock(&rules->m_finish);
+    //     take_fork(rules, philo);
+    //     eat(rules, philo);
+    //     // put_fork(rules, philo);
+    //     sleeping_and_thinking(rules, philo);
+    // }
     return (NULL);
 }
 
@@ -38,21 +55,24 @@ void *waiter(void *arg)
 
     while (!rules->finish)
     {
-        pthread_mutex_lock(&rules->m_finish);
+        pthread_mutex_lock(&rules->m_check);
         if (rules->all_satisfied == rules->num_philosophers)
+        {
+            pthread_mutex_lock(&rules->m_finish);
             rules->finish = 1;
-        pthread_mutex_unlock(&rules->m_finish);
+            pthread_mutex_unlock(&rules->m_finish);
+        }
+        pthread_mutex_unlock(&rules->m_check);
 
         pthread_mutex_lock(&rules->m_check);
-        pthread_mutex_lock(&rules->m_finish);
         if (!rules->finish && timestamp() - rules->philo->last_meal > rules->time_to_die)
         {
             lock_print(rules, rules->philo->id, "died");
+            pthread_mutex_lock(&rules->m_finish);
             rules->finish = 1;
+            pthread_mutex_unlock(&rules->m_finish);
         }
         pthread_mutex_unlock(&rules->m_check);
-        pthread_mutex_unlock(&rules->m_finish);
-        usleep(100);
     }
     return NULL;
 }
