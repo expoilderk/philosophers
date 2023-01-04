@@ -12,27 +12,25 @@
 
 #include "philo.h"
 
-void	*dinner(void *arg)
+void *dinner(void *arg)
 {
-	t_philo	*philo;
-	t_rules	*rules;
+	t_philo *philo;
 
 	philo = (t_philo *)arg;
-	rules = philo->rules;
-	if (philo->id % 2 && rules->num_philosophers > 1)
-		usleep(rules->time_to_eat);
+	if (philo->id % 1 && philo->rules->num_philosophers > 1)
+		usleep(philo->rules->time_to_eat);
 	while (1)
 	{
-		if (check_finish(rules))
-			break ;
-		take_fork(rules, philo);
-		eat(rules, philo);
-		sleeping_and_thinking(rules, philo);
+		if (check_finish(philo->rules))
+			break;
+		take_fork(philo->rules, philo);
+		eat(philo->rules, philo);
+		sleeping_and_thinking(philo->rules, philo);
 	}
 	return (NULL);
 }
 
-int	check_finish(t_rules *rules)
+int check_finish(t_rules *rules)
 {
 	pthread_mutex_lock(&rules->m_finish);
 	if (rules->finish)
@@ -44,7 +42,7 @@ int	check_finish(t_rules *rules)
 	return (0);
 }
 
-void	waiter(t_rules *rules)
+void waiter(t_rules *rules)
 {
 	pthread_mutex_lock(&rules->m_check);
 	if (rules->all_satisfied == rules->num_philosophers)
@@ -56,26 +54,27 @@ void	waiter(t_rules *rules)
 	pthread_mutex_unlock(&rules->m_check);
 }
 
-void	*monitor(void *arg)
+void *monitor(void *arg)
 {
-	t_rules	*rules;
+	t_philo *philo;
 
-	rules = (t_rules *)arg;
+	philo = (t_philo *)arg;
 	while (1)
 	{
-		if (check_finish(rules))
-			break ;
-		waiter(rules);
-		pthread_mutex_lock(&rules->m_check);
-		if (!rules->finish && timestamp() - \
-				rules->philo->last_meal > rules->time_to_die)
+		if (check_finish(philo->rules))
+			break;
+		waiter(philo->rules);
+		pthread_mutex_lock(&philo->rules->m_check);
+		if (!philo->rules->finish && timestamp() -
+											 philo->last_meal >
+										 philo->rules->time_to_die)
 		{
-			lock_print(rules, rules->philo->id, "died");
-			pthread_mutex_lock(&rules->m_finish);
-			rules->finish = 1;
-			pthread_mutex_unlock(&rules->m_finish);
+			lock_print(philo->rules, philo->id, "died");
+			pthread_mutex_lock(&philo->rules->m_finish);
+			philo->rules->finish = 1;
+			pthread_mutex_unlock(&philo->rules->m_finish);
 		}
-		pthread_mutex_unlock(&rules->m_check);
+		pthread_mutex_unlock(&philo->rules->m_check);
 		usleep(100);
 	}
 	return (NULL);
