@@ -6,7 +6,7 @@
 /*   By: mreis-me <mreis-me@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 23:09:25 by mreis-me          #+#    #+#             */
-/*   Updated: 2023/01/04 00:18:21 by mreis-me         ###   ########.fr       */
+/*   Updated: 2023/01/04 07:50:41 by mreis-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,7 @@ void sleeping_and_thinking(t_rules *rules, t_philo *philo);
 // Time
 long timestamp();
 long time_diff(long start, long end);
-void smart_sleep(int time, t_rules *rules);
-void ft_usleep(int ms);
+void smart_sleep(int ms);
 
 // Help or Error
 void error_msg();

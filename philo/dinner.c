@@ -6,13 +6,12 @@
 /*   By: mreis-me <mreis-me@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 20:12:42 by mreis-me          #+#    #+#             */
-/*   Updated: 2023/01/04 00:18:16 by mreis-me         ###   ########.fr       */
+/*   Updated: 2023/01/04 08:53:19 by mreis-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-// Função que simula a comida de um filósofo
 void *dinner(void *arg)
 {
     t_philo *philo;
@@ -21,31 +20,20 @@ void *dinner(void *arg)
     philo = (t_philo *)arg;
     rules = philo->rules;
     if (philo->id % 2 && rules->num_philosophers > 1)
-        usleep(rules->time_to_eat * 100);
-    // smart_sleep(rules->time_to_eat, rules);
-    // ft_usleep(rules->time_to_eat / 10);
-
-    while (!rules->finish)
+        usleep(rules->time_to_eat);
+    while (1)
     {
+        pthread_mutex_lock(&rules->m_finish);
+        if (rules->finish)
+        {
+            pthread_mutex_unlock(&rules->m_finish);
+            break;
+        }
+        pthread_mutex_unlock(&rules->m_finish);
         take_fork(rules, philo);
         eat(rules, philo);
         sleeping_and_thinking(rules, philo);
     }
-
-    // while (1)
-    // {
-    //     pthread_mutex_lock(&rules->m_finish);
-    //     if (rules->finish)
-    //     {
-    //         pthread_mutex_unlock(&rules->m_finish);
-    //         break;
-    //     }
-    //     pthread_mutex_unlock(&rules->m_finish);
-    //     take_fork(rules, philo);
-    //     eat(rules, philo);
-    //     // put_fork(rules, philo);
-    //     sleeping_and_thinking(rules, philo);
-    // }
     return (NULL);
 }
 
@@ -53,8 +41,16 @@ void *waiter(void *arg)
 {
     t_rules *rules = (t_rules *)arg;
 
-    while (!rules->finish)
+    while (1)
     {
+        pthread_mutex_lock(&rules->m_finish);
+        if (rules->finish)
+        {
+            pthread_mutex_unlock(&rules->m_finish);
+            break;
+        }
+        pthread_mutex_unlock(&rules->m_finish);
+
         pthread_mutex_lock(&rules->m_check);
         if (rules->all_satisfied == rules->num_philosophers)
         {
@@ -73,6 +69,7 @@ void *waiter(void *arg)
             pthread_mutex_unlock(&rules->m_finish);
         }
         pthread_mutex_unlock(&rules->m_check);
+        usleep(100);
     }
     return NULL;
 }
