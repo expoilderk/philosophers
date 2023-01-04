@@ -6,7 +6,7 @@
 /*   By: mreis-me <mreis-me@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 20:13:08 by mreis-me          #+#    #+#             */
-/*   Updated: 2022/12/22 15:56:11 by mreis-me         ###   ########.fr       */
+/*   Updated: 2023/01/03 18:36:54 by mreis-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,10 @@ void init(char **argv, t_rules *rules)
     init_mutex(rules);
 
     // Inicializa os filósofos
-    init_philo(rules);
+    init_threads(rules);
+
+    // Inicializa o waiter
+    // init_waiter(rules);
 }
 
 // função que inicializa a mesa
@@ -40,6 +43,7 @@ void init_rules(char **argv, t_rules *rules)
     rules->time_to_die = ft_atoi(argv[2]);
     rules->time_to_eat = ft_atoi(argv[3]);
     rules->time_to_sleep = ft_atoi(argv[4]);
+    rules->finish = 0;
     rules->all_satisfied = 0;
     rules->someone_died = 0;
     if (argv[5])
@@ -49,24 +53,31 @@ void init_rules(char **argv, t_rules *rules)
 }
 
 // função que inicializa os filósofos
-void init_philo(t_rules *rules)
+void init_threads(t_rules *rules)
 {
-    int i = 0;
+    int i;
+    pthread_t thread_waiter;
+
     // Aloca memória para os filósofos
     rules->philo = malloc(sizeof(t_philo) * rules->num_philosophers);
 
     // Inicializa os dados para cada filósofo
+    i = 0;
     while (i < rules->num_philosophers)
     {
         rules->philo[i].id = i + 1;
         rules->philo[i].left_fork = i;
         rules->philo[i].right_fork = (i + 1) % rules->num_philosophers;
         rules->philo[i].times_eaten = 0;
-        rules->philo[i].last_meal = 0;
         rules->philo[i].rules = rules;
-        
+
         // Cria as threads para cada filósofo (Criar uma função especifica init_threads?)
-        pthread_create(&rules->philo[i].thread, NULL, test_thread, &rules->philo[i]);
+        pthread_create(&rules->philo[i].thread_philo, NULL, dinner, &rules->philo[i]);
+        rules->philo[i].last_meal = timestamp();
+
+        // Cria a thread do garçom
+        pthread_create(&thread_waiter, NULL, waiter, rules);
+        pthread_detach(thread_waiter);
         i++;
     }
 }
@@ -74,14 +85,17 @@ void init_philo(t_rules *rules)
 // função que inicializa os mutexes dos garfos
 void init_mutex(t_rules *rules)
 {
-    int i = 0;
+    int i;
 
     // Aloca memória para os garfos
-    rules->forks = malloc(sizeof(pthread_mutex_t) * rules->num_philosophers);
+    rules->m_forks = malloc(sizeof(pthread_mutex_t) * rules->num_philosophers);
 
     // Inicializa mutexes para os garfos
+    i = 0;
     while (i < rules->num_philosophers)
-        pthread_mutex_init(&rules->forks[i++], NULL);
+        pthread_mutex_init(&rules->m_forks[i++], NULL);
 
-    pthread_mutex_init(&rules->print, NULL);
+    pthread_mutex_init(&rules->m_print, NULL);
+    pthread_mutex_init(&rules->m_check, NULL);
+    pthread_mutex_init(&rules->m_finish, NULL);
 }

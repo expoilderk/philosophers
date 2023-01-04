@@ -6,7 +6,7 @@
 /*   By: mreis-me <mreis-me@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 20:13:28 by mreis-me          #+#    #+#             */
-/*   Updated: 2022/12/22 10:50:07 by mreis-me         ###   ########.fr       */
+/*   Updated: 2023/01/03 20:04:39 by mreis-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 long timestamp()
 {
     struct timeval time;
+
     gettimeofday(&time, NULL);
     return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }
@@ -31,12 +32,17 @@ long time_diff(long start, long end)
 }
 
 /**
- *  Essa função calcula o tempo transcorrido em milissegundos entre um
- *  timestamp especificado como argumento e o tempo atual.
+ *  Essa função retorna o tempo atual em milissegundos.
  */
-long time_travelled(struct timeval timestamp)
+void smart_sleep(long time, t_rules *rules)
 {
-    struct timeval current_time;
-    gettimeofday(&current_time, NULL);
-    return (current_time.tv_sec - timestamp.tv_sec) * 1000 + (current_time.tv_usec - timestamp.tv_usec) / 1000;
+    long start;
+
+    start = timestamp();
+    while (!rules->finish)
+    {
+        if (time_diff(start, timestamp()) >= time)
+            break;
+        usleep(50);
+    }
 }

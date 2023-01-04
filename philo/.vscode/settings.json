@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        "*.tcc": "c",
+        "mutex": "c",
+        "stop_token": "c",
+        "thread": "c",
+        "*.inc": "c",
+        "condition_variable": "c",
+        "list": "c",
+        "string_view": "c",
+        "type_traits": "c"
+    }
+}
