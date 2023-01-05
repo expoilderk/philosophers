@@ -6,7 +6,7 @@
 /*   By: mreis-me <mreis-me@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 20:12:32 by mreis-me          #+#    #+#             */
-/*   Updated: 2023/01/04 10:31:36 by mreis-me         ###   ########.fr       */
+/*   Updated: 2023/01/05 15:04:16 by mreis-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	check(char **argv, int i, int j)
 	{
 		j = 0;
 		value = ft_atoi_l(argv[i]);
-		if (value < INT_MIN || value > INT_MAX)
+		if (value > INT_MAX)
 			flag = 0;
 		if (ft_issign(argv[i][j]) && argv[i][j + 1] != '\0')
 		{

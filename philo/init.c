@@ -6,13 +6,13 @@
 /*   By: mreis-me <mreis-me@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 20:13:08 by mreis-me          #+#    #+#             */
-/*   Updated: 2023/01/04 11:21:54 by mreis-me         ###   ########.fr       */
+/*   Updated: 2023/01/05 15:08:27 by mreis-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void init(char **argv, t_rules *rules)
+void	init(char **argv, t_rules *rules)
 {
 	rules->start_time = timestamp();
 	init_rules(argv, rules);
@@ -20,7 +20,7 @@ void init(char **argv, t_rules *rules)
 	init_threads(rules);
 }
 
-void init_rules(char **argv, t_rules *rules)
+void	init_rules(char **argv, t_rules *rules)
 {
 	rules->num_philosophers = (int)ft_atoi_l(argv[1]);
 	rules->time_to_die = (int)ft_atoi_l(argv[2]);
@@ -34,10 +34,9 @@ void init_rules(char **argv, t_rules *rules)
 		rules->num_times_eat = -1;
 }
 
-void init_threads(t_rules *rules)
+void	init_threads(t_rules *rules)
 {
-	int i;
-	// pthread_t thread_waiter;
+	int	i;
 
 	i = 0;
 	rules->philo = malloc(sizeof(t_philo) * rules->num_philosophers);
@@ -48,11 +47,8 @@ void init_threads(t_rules *rules)
 		rules->philo[i].right_fork = (i + 1) % rules->num_philosophers;
 		rules->philo[i].times_eaten = 0;
 		rules->philo[i].rules = rules;
-		pthread_create(&rules->philo[i].thread_philo, NULL, dinner,
-					   &rules->philo[i]);
-		// rules->philo[i].last_meal = timestamp();
-		// pthread_create(&thread_waiter, NULL, monitor, rules);
-		// pthread_detach(thread_waiter);
+		pthread_create(&rules->philo[i].thread_philo, NULL, dinner, \
+				&rules->philo[i]);
 		i++;
 	}
 	i = 0;
@@ -63,9 +59,9 @@ void init_threads(t_rules *rules)
 	}
 }
 
-void init_mutex(t_rules *rules)
+void	init_mutex(t_rules *rules)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	rules->m_forks = malloc(sizeof(pthread_mutex_t) * rules->num_philosophers);
