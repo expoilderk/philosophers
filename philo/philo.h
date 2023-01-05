@@ -6,7 +6,7 @@
 /*   By: mreis-me <mreis-me@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 23:09:25 by mreis-me          #+#    #+#             */
-/*   Updated: 2023/01/04 13:47:09 by mreis-me         ###   ########.fr       */
+/*   Updated: 2023/01/04 12:03:00 by mreis-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,17 @@
 #define INT_MIN -2147483648
 #define INT_MAX 2147483647
 
+typedef struct s_philo
+{
+	int id;
+	int times_eaten;
+	long last_meal;
+	int left_fork;
+	int right_fork;
+	struct s_rules *rules;
+	pthread_t thread_philo;
+} t_philo;
+
 typedef struct s_rules
 {
 	int num_philosophers;
@@ -32,23 +43,12 @@ typedef struct s_rules
 	int all_satisfied;
 	int finish;
 	long start_time;
+	t_philo *philo;
 	pthread_mutex_t *m_forks;
 	pthread_mutex_t m_print;
 	pthread_mutex_t m_check;
 	pthread_mutex_t m_finish;
 } t_rules;
-
-typedef struct s_philo
-{
-	int id;
-	int times_eaten;
-	long last_meal;
-	int left_fork;
-	int right_fork;
-	t_rules *rules;
-	pthread_t thread_philo;
-	pthread_mutex_t m_philo;
-} t_philo;
 
 // Init & Finish
 void init(char **argv, t_rules *rules);

@@ -6,7 +6,7 @@
 /*   By: mreis-me <mreis-me@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 20:13:08 by mreis-me          #+#    #+#             */
-/*   Updated: 2023/01/04 23:00:54 by mreis-me         ###   ########.fr       */
+/*   Updated: 2023/01/04 11:21:54 by mreis-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,35 +37,30 @@ void init_rules(char **argv, t_rules *rules)
 void init_threads(t_rules *rules)
 {
 	int i;
-	pthread_t thread_waiter;
-	t_philo *philo;
+	// pthread_t thread_waiter;
 
 	i = 0;
-	philo = malloc(sizeof(t_philo) * rules->num_philosophers);
+	rules->philo = malloc(sizeof(t_philo) * rules->num_philosophers);
 	while (i < rules->num_philosophers)
 	{
-		philo[i].id = i + 1;
-		philo[i].left_fork = i;
-		philo[i].right_fork = (i + 1) % rules->num_philosophers;
-		philo[i].times_eaten = 0;
-		philo[i].rules = rules;
-
-		pthread_create(&philo[i].thread_philo, NULL, dinner,
-					   &philo[i]);
-		pthread_mutex_lock(&philo->rules->m_check);
-		philo->last_meal = timestamp();
-		pthread_mutex_unlock(&philo->rules->m_check);
-		pthread_create(&thread_waiter, NULL, monitor, &philo[i]);
-		pthread_detach(thread_waiter);
+		rules->philo[i].id = i + 1;
+		rules->philo[i].left_fork = i;
+		rules->philo[i].right_fork = (i + 1) % rules->num_philosophers;
+		rules->philo[i].times_eaten = 0;
+		rules->philo[i].rules = rules;
+		pthread_create(&rules->philo[i].thread_philo, NULL, dinner,
+					   &rules->philo[i]);
+		// rules->philo[i].last_meal = timestamp();
+		// pthread_create(&thread_waiter, NULL, monitor, rules);
+		// pthread_detach(thread_waiter);
 		i++;
 	}
 	i = 0;
 	while (i < rules->num_philosophers)
 	{
-		pthread_join(philo[i].thread_philo, NULL);
+		pthread_join(rules->philo[i].thread_philo, NULL);
 		i++;
 	}
-	free(philo);
 }
 
 void init_mutex(t_rules *rules)

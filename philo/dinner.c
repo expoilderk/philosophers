@@ -6,7 +6,7 @@
 /*   By: mreis-me <mreis-me@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 20:12:42 by mreis-me          #+#    #+#             */
-/*   Updated: 2023/01/04 22:59:11 by mreis-me         ###   ########.fr       */
+/*   Updated: 2023/01/04 12:05:06 by mreis-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,39 @@
 void *dinner(void *arg)
 {
 	t_philo *philo;
+	t_rules *rules;
+	pthread_t thread_waiter;
 
 	philo = (t_philo *)arg;
+	rules = philo->rules;
+	pthread_mutex_lock(&rules->m_check);
+	rules->philo->last_meal = timestamp();
+	pthread_mutex_unlock(&rules->m_check);
+	pthread_create(&thread_waiter, NULL, monitor, rules);
+	pthread_detach(thread_waiter);
 
-	if (philo->id % 1 && philo->rules->num_philosophers > 1)
-		usleep(philo->rules->time_to_eat);
+	if (philo->id % 2 && rules->num_philosophers > 1)
+		usleep(1500);
 	while (1)
 	{
-		if (check_finish(philo->rules))
+		if (check_finish(rules))
 			break;
-		eat(philo->rules, philo);
-		sleeping_and_thinking(philo->rules, philo);
+		eat(rules, philo);
+		sleeping_and_thinking(rules, philo);
 	}
 	return (NULL);
+}
+
+int check_finish(t_rules *rules)
+{
+	pthread_mutex_lock(&rules->m_finish);
+	if (rules->finish)
+	{
+		pthread_mutex_unlock(&rules->m_finish);
+		return (1);
+	}
+	pthread_mutex_unlock(&rules->m_finish);
+	return (0);
 }
 
 void waiter(t_rules *rules)
@@ -44,25 +64,25 @@ void waiter(t_rules *rules)
 
 void *monitor(void *arg)
 {
-	t_philo *philo;
+	t_rules *rules;
 
-	philo = (t_philo *)arg;
+	rules = (t_rules *)arg;
 	while (1)
 	{
-		if (check_finish(philo->rules))
+		if (check_finish(rules))
 			break;
-		waiter(philo->rules);
-		pthread_mutex_lock(&philo->rules->m_check);
-		if (!philo->rules->finish && timestamp() -
-											 philo->last_meal >
-										 philo->rules->time_to_die)
+		waiter(rules);
+		pthread_mutex_lock(&rules->m_check);
+		if (!rules->finish && timestamp() -
+									  rules->philo->last_meal >
+								  rules->time_to_die)
 		{
-			lock_print(philo->rules, philo->id, "died");
-			pthread_mutex_lock(&philo->rules->m_finish);
-			philo->rules->finish = 1;
-			pthread_mutex_unlock(&philo->rules->m_finish);
+			lock_print(rules, rules->philo->id, "died");
+			pthread_mutex_lock(&rules->m_finish);
+			rules->finish = 1;
+			pthread_mutex_unlock(&rules->m_finish);
 		}
-		pthread_mutex_unlock(&philo->rules->m_check);
+		pthread_mutex_unlock(&rules->m_check);
 		usleep(100);
 	}
 	return (NULL);
