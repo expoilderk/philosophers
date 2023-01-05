@@ -6,7 +6,7 @@
 /*   By: mreis-me <mreis-me@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 20:13:08 by mreis-me          #+#    #+#             */
-/*   Updated: 2023/01/04 13:56:10 by mreis-me         ###   ########.fr       */
+/*   Updated: 2023/01/04 23:00:54 by mreis-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,11 @@ void init_threads(t_rules *rules)
 		philo[i].times_eaten = 0;
 		philo[i].rules = rules;
 
-		// pthread_mutex_init(&philo[i].m_philo, NULL);
 		pthread_create(&philo[i].thread_philo, NULL, dinner,
 					   &philo[i]);
-		philo[i].last_meal = timestamp();
+		pthread_mutex_lock(&philo->rules->m_check);
+		philo->last_meal = timestamp();
+		pthread_mutex_unlock(&philo->rules->m_check);
 		pthread_create(&thread_waiter, NULL, monitor, &philo[i]);
 		pthread_detach(thread_waiter);
 		i++;
@@ -70,7 +71,6 @@ void init_threads(t_rules *rules)
 void init_mutex(t_rules *rules)
 {
 	int i;
-	t_philo philo;
 
 	i = 0;
 	rules->m_forks = malloc(sizeof(pthread_mutex_t) * rules->num_philosophers);

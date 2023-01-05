@@ -6,7 +6,7 @@
 /*   By: mreis-me <mreis-me@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 20:12:42 by mreis-me          #+#    #+#             */
-/*   Updated: 2023/01/04 12:05:06 by mreis-me         ###   ########.fr       */
+/*   Updated: 2023/01/04 22:59:11 by mreis-me         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,29 +17,17 @@ void *dinner(void *arg)
 	t_philo *philo;
 
 	philo = (t_philo *)arg;
+
 	if (philo->id % 1 && philo->rules->num_philosophers > 1)
 		usleep(philo->rules->time_to_eat);
 	while (1)
 	{
 		if (check_finish(philo->rules))
 			break;
-		take_fork(philo->rules, philo);
 		eat(philo->rules, philo);
 		sleeping_and_thinking(philo->rules, philo);
 	}
 	return (NULL);
-}
-
-int check_finish(t_rules *rules)
-{
-	pthread_mutex_lock(&rules->m_finish);
-	if (rules->finish)
-	{
-		pthread_mutex_unlock(&rules->m_finish);
-		return (1);
-	}
-	pthread_mutex_unlock(&rules->m_finish);
-	return (0);
 }
 
 void waiter(t_rules *rules)
